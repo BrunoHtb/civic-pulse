@@ -1,0 +1,6 @@
+@CivicPulse.Api_HostAddress = http://localhost:5047
+
+GET {{CivicPulse.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
