@@ -11,15 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ingestion\Hydrology\" />
-    <Folder Include="Ingestion\Weather\" />
     <Folder Include="Auth\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="10.0.2" />
   </ItemGroup>
 
 </Project>
