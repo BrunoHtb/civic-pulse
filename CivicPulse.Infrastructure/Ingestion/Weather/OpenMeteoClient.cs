@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Globalization;
+using System.Net.Http.Json;
 
 namespace CivicPulse.Infrastructure.Ingestion.Weather
 {
@@ -13,7 +14,10 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
 
         public async Task<OpenMeteoResponse?> GetHourlyAsync(double lat, double lon, CancellationToken ct = default)
         {
-            var url =$"v1/forecast?latitude={lat}&longitude={lon}&hourly=temperature_2m,rain&timezone=UTC";
+            var latStr = lat.ToString(CultureInfo.InvariantCulture);
+            var lonStr = lon.ToString(CultureInfo.InvariantCulture);
+
+            var url = $"v1/forecast?latitude={latStr}&longitude={lonStr}&hourly=temperature_2m,rain&timezone=UTC";
 
             return await _http.GetFromJsonAsync<OpenMeteoResponse>(url, ct);
         }

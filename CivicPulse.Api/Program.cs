@@ -3,6 +3,8 @@ using CivicPulse.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Text;
+
 
 using System.Text;
 
@@ -47,7 +49,34 @@ builder.Services.AddAuthorization(options =>
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    const string schemeId = "Bearer";
+
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "CivicPulse.Api",
+        Version = "v1"
+    });
+
+    c.AddSecurityDefinition(schemeId, new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Cole assim: Bearer {seu_token}"
+    });
+
+    // .NET 10 / OpenAPI.NET 2.x
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference(schemeId, document)] = new List<string>()
+    });
+});
+
+
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();

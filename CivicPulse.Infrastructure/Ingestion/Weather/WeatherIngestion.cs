@@ -68,7 +68,9 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
 
                 for (int i = 0; i < times.Count; i++)
                 {
-                    if (!DateTime.TryParse(times[i], out var tsUtc)) continue;
+                    if (!DateTimeOffset.TryParse(times[i], out var dto)) continue;
+                    var tsUtc = dto.UtcDateTime;
+
 
                     if (temps is not null && i < temps.Count)
                     {
