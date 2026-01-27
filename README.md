@@ -10,6 +10,7 @@ CivicPulse é uma API backend desenvolvida em **ASP.NET Core (.NET 10)** para in
 - 🔐 Autenticação **JWT (Bearer Token)** com policies
 - 🌦️ Ingestão automática de dados climáticos (Open-Meteo)
 - 🗄️ Persistência em **PostgreSQL (Docker)**
+- ⚡ Cache distribuído com **Redis** para otimização de leituras
 - 🧾 Auditoria de execuções de ingestão (`IngestionRuns`)
 - 🧩 Arquitetura em camadas (Api / Core / Infrastructure)
 
@@ -123,5 +124,6 @@ Esse endpoint:
 - ASP.NET Core (.NET 10)
 - Entity Framework Core
 - PostgreSQL
+- Redis
 - Docker / Docker Compose
 - JWT Authentication
