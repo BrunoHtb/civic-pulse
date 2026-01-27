@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Exceptions\" />
+    <Compile Remove="Dtos\**" />
+    <Compile Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Dtos\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <None Remove="Dtos\**" />
+    <None Remove="Exceptions\**" />
   </ItemGroup>
 
 </Project>

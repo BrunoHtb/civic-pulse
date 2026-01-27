@@ -1,8 +1,10 @@
 ﻿using CivicPulse.Core.Interface;
+using CivicPulse.Core.Interfaces;
 using CivicPulse.Core.Services;
 using CivicPulse.Infrastructure.Ingestion.Hydrology;
 using CivicPulse.Infrastructure.Ingestion.Weather;
 using CivicPulse.Infrastructure.Persistence;
+using CivicPulse.Infrastructure.Read;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,7 @@ namespace CivicPulse.Infrastructure
             services.AddScoped<IHydrologyIngestion, HydrologyIngestion>();
 
             services.AddScoped<IIngestionService, IngestionService>();
+            services.AddScoped<IReadQueries, ReadQueries>();
 
             return services;
         }

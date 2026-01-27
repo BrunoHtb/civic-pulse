@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CivicPulse.Core\CivicPulse.Core.csproj" />
+    <Compile Remove="Auth\**" />
+    <EmbeddedResource Remove="Auth\**" />
+    <None Remove="Auth\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Auth\" />
+    <ProjectReference Include="..\CivicPulse.Core\CivicPulse.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
