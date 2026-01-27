@@ -6,6 +6,7 @@ using CivicPulse.Infrastructure.Ingestion.Weather;
 using CivicPulse.Infrastructure.Persistence;
 using CivicPulse.Infrastructure.Read;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,11 +26,19 @@ namespace CivicPulse.Infrastructure
                 http.Timeout = TimeSpan.FromSeconds(30);
             });
 
+
             services.AddScoped<IWeatherIngestion, WeatherIngestion>();
             services.AddScoped<IHydrologyIngestion, HydrologyIngestion>();
 
             services.AddScoped<IIngestionService, IngestionService>();
-            services.AddScoped<IReadQueries, ReadQueries>();
+
+            services.AddScoped<ReadQueries>();
+            services.AddScoped<IReadQueries>(sp =>
+            {
+                var inner = sp.GetRequiredService<ReadQueries>();
+                var cache = sp.GetRequiredService<IDistributedCache>();
+                return new CachedReadQueries(inner, cache);
+            });
 
             return services;
         }
