@@ -1,6 +1,7 @@
 ﻿using CivicPulse.Core.Entities;
 using CivicPulse.Core.Enums;
 using CivicPulse.Core.Interface;
+using CivicPulse.Core.Models;
 using CivicPulse.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +18,10 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
             _client = client;
         }
 
-        public async Task<int> IngestAsync(CancellationToken ct = default)
+        public async Task<IngestionResult> IngestAsync(CancellationToken ct = default)
         {
             var source = await _db.Sources.FirstOrDefaultAsync(s => s.Key == "open-meteo", ct);
+
             if (source is null)
             {
                 source = new Source
@@ -55,7 +57,8 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
                 stations.Add(demo);
             }
 
-            var insertedOrUpdated = 0;
+            var inserted = 0;
+            var updated = 0;
 
             foreach (var st in stations)
             {
@@ -71,32 +74,33 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
                     if (!DateTimeOffset.TryParse(times[i], out var dto)) continue;
                     var tsUtc = dto.UtcDateTime;
 
-
+                    // Temperatura
                     if (temps is not null && i < temps.Count)
                     {
-                        insertedOrUpdated += await UpsertMeasurement(
+                        var r = await UpsertMeasurement(
                             st.Id, source.Id, VariableType.TemperatureC, tsUtc, (decimal)temps[i], ct);
+
+                        inserted += r.Inserted;
+                        updated += r.Updated;
                     }
 
+                    // Chuva
                     if (rains is not null && i < rains.Count)
                     {
-                        insertedOrUpdated += await UpsertMeasurement(
+                        var r = await UpsertMeasurement(
                             st.Id, source.Id, VariableType.RainMm, tsUtc, (decimal)rains[i], ct);
+
+                        inserted += r.Inserted;
+                        updated += r.Updated;
                     }
                 }
             }
 
             await _db.SaveChangesAsync(ct);
-            return insertedOrUpdated;
+            return new IngestionResult(inserted, updated);
         }
 
-        private async Task<int> UpsertMeasurement(
-            Guid stationId,
-            Guid sourceId,
-            VariableType variable,
-            DateTime tsUtc,
-            decimal value,
-            CancellationToken ct)
+        private async Task<IngestionResult> UpsertMeasurement(Guid stationId, Guid sourceId, VariableType variable, DateTime tsUtc, decimal value, CancellationToken ct)
         {
             var existing = await _db.Measurements.FirstOrDefaultAsync(m =>
                 m.StationId == stationId &&
@@ -115,16 +119,17 @@ namespace CivicPulse.Infrastructure.Ingestion.Weather
                     Value = value,
                     QualityFlag = "good"
                 });
-                return 1;
+
+                return new IngestionResult(Inserted: 1, Updated: 0);
             }
 
             if (existing.Value != value)
             {
                 existing.Value = value;
-                return 1;
+                return new IngestionResult(Inserted: 0, Updated: 1);
             }
 
-            return 0;
+            return new IngestionResult(0, 0);
         }
     }
 }

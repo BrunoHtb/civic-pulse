@@ -1,12 +1,11 @@
 ﻿using CivicPulse.Core.Interface;
+using CivicPulse.Core.Models;
 
 namespace CivicPulse.Infrastructure.Ingestion.Hydrology
 {
     public class HydrologyIngestion : IHydrologyIngestion
     {
-        public Task<int> IngestAsync(CancellationToken ct = default)
-        {
-            return Task.FromResult(0);
-        }
+        public Task<IngestionResult> IngestAsync(CancellationToken ct = default)
+        => Task.FromResult(new IngestionResult(0, 0));
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace CivicPulse.Core.Interface
+﻿using CivicPulse.Core.Models;
+
+namespace CivicPulse.Core.Interface
 {
     public interface IHydrologyIngestion
     {
-        Task<int> IngestAsync(CancellationToken ct = default);
+        Task<IngestionResult> IngestAsync(CancellationToken ct = default);
     }
 }
