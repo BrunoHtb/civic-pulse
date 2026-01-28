@@ -1,7 +1,6 @@
 using CivicPulse.Api.Auth;
 using CivicPulse.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
@@ -73,12 +72,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddStackExchangeRedisCache(options =>
+var redisConn = builder.Configuration.GetConnectionString("Redis");
+if (!string.IsNullOrWhiteSpace(redisConn))
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "CivicPulse:";
-
-});
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConn;
+        options.InstanceName = "CivicPulse:";
+    });
+}
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -100,3 +102,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
