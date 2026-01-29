@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:16
@@ -18,38 +18,38 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: civicpulse
         ports:
-         - 5433:5432
+          - 5433:5432
         options: >-
-         --health-cmd="pg_isready -U postgres -d civicpulse"
-         --health-interval=10s
-         --health-timeout=5s
-         --health-retries=10
-         
+          --health-cmd="pg_isready -U postgres -d civicpulse"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
       redis:
         image: redis:7-alpine
         ports:
-         - 6379:6379
+          - 6379:6379
         options: >-
-         --health-cmd="redis-cli ping"
-         --health-interval=10s
-         --health-timeout=5s
-         --health-retires=10
-         
-      steps:
-       - name: Checkout
-         uses: actions/checkout@v4
-         
-       - name: Setup .NET
-         uses: actions/setup-dotnet@v5
-         with:
-           dotnet-version: "10.0.x"
-           cache: true
-           
-       - name: Restore
-         run: dotnet Restore
-       
-       - name: Build
-         run: dotnet build --configuration Release --no-Restore
-         
-       - name: Test
-         run: dotnet test --configuration Release --no-build --verbosity normal
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+          cache: true
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
