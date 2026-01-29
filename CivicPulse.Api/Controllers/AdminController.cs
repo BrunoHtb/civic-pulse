@@ -25,8 +25,22 @@ namespace CivicPulse.Api.Controllers
         [HttpPost("ingestion/run")]
         public async Task<IActionResult> RunIngestion(CancellationToken ct)
         {
-            var source = await _db.Sources.AsNoTracking()
-                .FirstAsync(s => s.Key == "open-meteo", ct);
+            var source = await _db.Sources.FirstOrDefaultAsync(s => s.Key == "open-meteo", ct);
+
+            if (source is null)
+            {
+                source = new Source
+                {
+                    Key = "open-meteo",
+                    Name = "Open-Meteo",
+                    BaseUrl = "https://api.open-meteo.com",
+                    IsActive = true,
+                    CreatedAtUtc = DateTime.UtcNow
+                };
+
+                _db.Sources.Add(source);
+                await _db.SaveChangesAsync(ct);
+            }
 
             var run = new IngestionRun
             {
