@@ -54,5 +54,16 @@ jobs:
           dotnet build ./CivicPulse.Api/CivicPulse.Api.csproj --configuration Release --no-restore
           dotnet build ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --no-restore
 
+      - name: Install EF Core CLI
+        run: dotnet tool update --global dotnet-ef
+        
+      - name: Apply migrations
+        env:
+          ConnectionStrings__Default: "Host=localhost;Port=5433;Database=civicpulse;Username=postgres;Password=postgres"
+        run: |
+          dotnet ef database update \
+            --project ./CivicPulse.Infrastructure/CivicPulse.Infrastructure.csproj \
+            --startup-project ./CivicPulse.Api/CivicPulse.Api.csproj
+
       - name: Test (Integration)
         run: dotnet test ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --no-build --verbosity normal
