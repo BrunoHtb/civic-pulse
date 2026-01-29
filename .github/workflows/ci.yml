@@ -45,10 +45,14 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore
-        run: dotnet restore
-
+        run: |
+          dotnet restore ./CivicPulse.Api/CivicPulse.Api.csproj
+          dotnet restore ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj
+          
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          dotnet build ./CivicPulse.Api/CivicPulse.Api.csproj --configuration Release --no-restore
+          dotnet build ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Test (Integration)
+        run: dotnet test ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --no-build --verbosity normal
