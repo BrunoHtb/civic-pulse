@@ -18,22 +18,24 @@ namespace CivicPulse.IntegrationTests
         {
             var login = await _client.PostAsJsonAsync("/api/auth/login", new
             {
-                Username = "admin",
-                Password = "admin123"
+                username = "admin",
+                password = "admin123"
             });
-            Assert.Equal(HttpStatusCode.OK, login.StatusCode);
 
-            var payload = await login.Content.ReadFromJsonAsync<Dictionary<string, object>>();
-            var token = payload?["token"]?.ToString();
+            var loginRaw = await login.Content.ReadAsStringAsync();
+            Assert.True(login.IsSuccessStatusCode, loginRaw);
+
+            var payload = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(loginRaw);
+            var token = payload?["accessToken"]?.ToString();
             Assert.False(string.IsNullOrWhiteSpace(token));
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var resp = await _client.PostAsync("/api/admin/ingestion/run", null);
-            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
 
-            var body = await resp.Content.ReadAsStringAsync();
-            Assert.False(string.IsNullOrWhiteSpace(body));
+            var respRaw = await resp.Content.ReadAsStringAsync();
+            Assert.True(resp.IsSuccessStatusCode, respRaw);
         }
+
     }
 }

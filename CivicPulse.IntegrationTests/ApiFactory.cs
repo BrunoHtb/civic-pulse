@@ -17,8 +17,9 @@ namespace CivicPulse.IntegrationTests
                     ["ConnectionString:Redis"] = "localhost:6379",
 
                     ["Jwt:Issuer"] = "CivicPulse",
-                    ["Jwt:Audience"] = "CivicPulse.Api",
-                    ["Jwt:Key"] = "CHAVE_TESTE_CHAVE_TESTE_CHAVE_TESTE_1234567890"
+                    ["Jwt:Audience"] = "CivicPulse",
+                    ["Jwt:Key"] = "SUPER_SECRET_DEV_KEY_CHANGE_ME_32_CHARS_MIN",
+                    ["Jwt:ExpiresMinutes"] = "60"
                 };
 
                 cfg.AddInMemoryCollection(overrides);

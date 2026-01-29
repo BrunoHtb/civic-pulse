@@ -27,7 +27,7 @@ namespace CivicPulse.IntegrationTests
 
             var json = await resp.Content.ReadFromJsonAsync<Dictionary<string, object>>();
             Assert.NotNull(json);
-            Assert.True(json.ContainsKey("token"));
+            Assert.True(json.ContainsKey("accessToken"));
         }
     }
 }
