@@ -69,4 +69,4 @@ jobs:
 
 
       - name: Test (Integration)
-        run: dotnet test ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test ./CivicPulse.IntegrationTests/CivicPulse.IntegrationTests.csproj --configuration Release --verbosity normal
