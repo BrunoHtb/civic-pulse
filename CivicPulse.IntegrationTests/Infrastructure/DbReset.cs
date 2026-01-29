@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 
-namespace CivicPulse.IntegrationTests
+namespace CivicPulse.IntegrationTests.Infrastructure
 {
     public static class DbReset
     {

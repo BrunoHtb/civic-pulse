@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using CivicPulse.IntegrationTests.Infrastructure;
+using System.Net;
 
 namespace CivicPulse.IntegrationTests
 {

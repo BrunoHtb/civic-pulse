@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CivicPulse.IntegrationTests.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;

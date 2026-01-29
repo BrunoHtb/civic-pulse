@@ -1,7 +1,6 @@
-﻿using Npgsql;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
+﻿using CivicPulse.IntegrationTests.Helpers;
+using CivicPulse.IntegrationTests.Infrastructure;
+using Npgsql;
 
 namespace CivicPulse.IntegrationTests;
 
@@ -19,39 +18,17 @@ public class IngestionIdempotencyTests : IClassFixture<ApiFactory>
     {
         await DbReset.ResetAsync(DbReset.GetTestDbConnectionString());
 
-        var token = await LoginAsync();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        await TestAuth.AuthenticateAsync(_client);
 
-        // run #1
+        // primeira ingestão #1
         await RunIngestionAsync();
-
         var count1 = await CountAsync(@"SELECT COUNT(*) FROM public.""Measurements"";");
 
-        // run #2
+        // segunda ingestão #2
         await RunIngestionAsync();
-
         var count2 = await CountAsync(@"SELECT COUNT(*) FROM public.""Measurements"";");
 
         Assert.Equal(count1, count2);
-    }
-
-    private async Task<string> LoginAsync()
-    {
-        var login = await _client.PostAsJsonAsync("/api/auth/login", new
-        {
-            username = "admin",
-            password = "admin123"
-        });
-
-        var raw = await login.Content.ReadAsStringAsync();
-        Assert.True(login.IsSuccessStatusCode, raw);
-
-        using var doc = JsonDocument.Parse(raw);
-        var root = doc.RootElement;
-
-        var token = root.TryGetProperty("accessToken", out var at) ? at.GetString() : null;
-        Assert.False(string.IsNullOrWhiteSpace(token));
-        return token!;
     }
 
     private async Task RunIngestionAsync()

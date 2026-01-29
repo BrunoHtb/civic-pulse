@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
-namespace CivicPulse.IntegrationTests
+namespace CivicPulse.IntegrationTests.Infrastructure
 {
     public class ApiFactory : WebApplicationFactory<Program>
     {
